@@ -1,0 +1,50 @@
+﻿<Window
+    x:Class="PrototypeDB.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:PrototypeDB"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:view="clr-namespace:PrototypeDB.Views"
+    Title="MainWindow"
+    MinWidth="1850"
+    MinHeight="1050"
+    d:DataContext="{d:DesignInstance local:MainViewModel,
+                                     IsDesignTimeCreatable=True}"
+    Background="Black"
+    mc:Ignorable="d">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <DataTemplate DataType="{x:Type local:BauteilTabViewModel}">
+                <view:BauteilTabView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type local:ReleaseTabViewModel}">
+                <view:ReleaseTabView />
+            </DataTemplate>
+            <Style BasedOn="{StaticResource MainButtonStyle}" TargetType="local:DBButton" />
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="0.2*" />
+            <RowDefinition Height="7*" />
+        </Grid.RowDefinitions>
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Orientation="Horizontal">
+            <local:DBButton Command="{Binding BauteilButtonCommand}" Content="Bauteilansicht" />
+            <local:DBButton Command="{Binding ReleasesButtonCommand}" Content="Releases" />
+        </StackPanel>
+        <Rectangle
+            Grid.Row="1"
+            Height="1"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            Fill="White" />
+        <ContentControl Grid.Row="2" Content="{Binding SelectedViewModel}" />
+    </Grid>
+</Window>
+

@@ -1,0 +1,244 @@
+﻿<UserControl
+    x:Class="PrototypeDB.Views.BauteilView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:PrototypeDB"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:view="clr-namespace:PrototypeDB.Views"
+    d:DataContext="{d:DesignInstance local:BauteilViewModel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="Transparent"
+    mc:Ignorable="d">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:CallMethodAction MethodName="RefreshListbox" TargetObject="{Binding}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <UserControl.Resources>
+        <!--<conv:IntToStringConverter x:Key="IntToStringConverter" />
+        <conv:DoubleToStringConverter x:Key="DoubleToStringConverter" />-->
+        <ResourceDictionary>
+            <Style BasedOn="{StaticResource DBTextBoxStyle}" TargetType="local:DBTextBoxControl" />
+            <Style BasedOn="{StaticResource ButtonStyle}" TargetType="local:DBButton" />
+            <Style BasedOn="{StaticResource AlternateRowColorListboxItemStyle}" TargetType="ListBoxItem" />
+            <Style BasedOn="{StaticResource DBListHeadLineTextBlockStyle}" TargetType="local:DBListHeadLineTextBlock" />
+            <Style BasedOn="{StaticResource DBListTextBlockStyle}" TargetType="local:DBListTextBlock" />
+            <Style BasedOn="{StaticResource HeadLineLabelStyle}" TargetType="Label" />
+            <Style BasedOn="{StaticResource TabControlStyle}" TargetType="TabControl" />
+            <Style BasedOn="{StaticResource TabItemStyle}" TargetType="TabItem" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*" />
+            <ColumnDefinition Width="15*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70" />
+            <RowDefinition Height="40*" />
+            <RowDefinition Height="4*" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Column="1" Content="Bauteilliste" />
+
+
+        <local:DBTextBoxControl
+            Grid.Column="1"
+            HorizontalAlignment="Left"
+            Label="Volltextsuche"
+            Text="{Binding TextFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <local:DBTextBoxControl
+            Grid.Column="1"
+            Width="100"
+            HorizontalAlignment="Right"
+            IsEnabled="False"
+            Label="Anzahl Bauteile"
+            Text="{Binding AnzahlAusgabe}" />
+
+
+        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+            <local:DBButton Command="{Binding InsertCommand}" Content="Übernehmen" />
+            <local:DBButton Command="{Binding UpdateCommand}" Content="Update" />
+            <local:DBButton Command="{Binding DeleteCommand}" Content="Löschen" />
+        </StackPanel>
+        <StackPanel
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            Orientation="Horizontal">
+            <StackPanel Orientation="Vertical">
+                <local:DBTextBoxControl
+                    IsEnabled="False"
+                    Label="ID"
+                    Text="{Binding Id}" />
+                <local:DBTextBoxControl
+                    Label="Materialnummer"
+                    Text="{Binding MaterialNummerEingabe}"
+                    ValueCheckIO="{Binding MaterialNummerCheck}" />
+                <local:DBTextBoxControl
+                    Label="Bauteilbezeichnung"
+                    Text="{Binding BauteilBezeichnungEingabe}"
+                    ValueCheckIO="{Binding BauteilBezeichnungCheck}" />
+                <local:DBTextBoxControl Label="Lebensdauer" Text="{Binding LebensdauerEingabe}" />
+                <local:DBTextBoxControl
+                    Label="Wert"
+                    Text="{Binding WertEingabe}"
+                    ValueCheckIO="{Binding WertCheck}" />
+                <local:DBTextBoxControl Label="Bauform" Text="{Binding BauformEingabe}" />
+                <local:DBTextBoxControl Label="Spannung" Text="{Binding SpannungEingabe}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical">
+                <local:DBTextBoxControl
+                    Label="Leistung"
+                    Text="{Binding LeistungEingabe}"
+                    ValueCheckIO="{Binding LeistungCheck}" />
+                <local:DBTextBoxControl
+                    Label="Toleranz"
+                    Text="{Binding ToleranzEingabe}"
+                    ValueCheckIO="{Binding ToleranzCheck}" />
+                <local:DBTextBoxControl
+                    Label="Bestand"
+                    Text="{Binding BestandEingabe}"
+                    ValueCheckIO="{Binding BestandCheck}" />
+                <local:DBTextBoxControl
+                    Label="Bedarf"
+                    Text="{Binding BedarfEingabe}"
+                    ValueCheckIO="{Binding BedarfCheck}" />
+                <local:DBTextBoxControl Label="Materialstatus" Text="{Binding MaterialstatusEingabe}" />
+                <local:DBTextBoxControl Label="Zusatzinfo 1" Text="{Binding ZusatzInfo1Eingabe}" />
+                <local:DBTextBoxControl Label="Zusatzinfo 2" Text="{Binding ZusatzInfo2Eingabe}" />
+            </StackPanel>
+
+        </StackPanel>
+
+        <Grid
+            x:Name="MainGrid"
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            Grid.Column="1"
+            Margin="10,0,10,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="1" />
+                <RowDefinition Name="ListBoxRow" Height="*" />
+            </Grid.RowDefinitions>
+            <Rectangle Grid.Row="1" Fill="White" />
+
+            <Grid x:Name="HeadLineGrid" Margin="8,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+
+                </Grid.ColumnDefinitions>
+                <local:DBListHeadLineTextBlock Text="ID" />
+                <local:DBListHeadLineTextBlock Grid.Column="1" Text="Material-nummer" />
+                <local:DBListHeadLineTextBlock Grid.Column="2" Text="Bauteil-bezeichnung" />
+                <local:DBListHeadLineTextBlock Grid.Column="3" Text="Wert" />
+                <local:DBListHeadLineTextBlock Grid.Column="4" Text="Bauform" />
+                <StackPanel Grid.Column="5" Orientation="Vertical">
+                    <local:DBListHeadLineTextBlock Text="Spannung" />
+                    <local:DBListHeadLineTextBlock Text="[V]" />
+                </StackPanel>
+                <StackPanel
+                    Grid.Column="6"
+                    HorizontalAlignment="Center"
+                    Orientation="Vertical">
+                    <local:DBListHeadLineTextBlock Text="Leistung" />
+                    <local:DBListHeadLineTextBlock Text="[W]" />
+                </StackPanel>
+                <StackPanel Grid.Column="7" Orientation="Vertical">
+                    <local:DBListHeadLineTextBlock Text="Toleranz" />
+                    <local:DBListHeadLineTextBlock Text="[%]" />
+                </StackPanel>
+                <StackPanel Grid.Column="8" Orientation="Vertical">
+                    <local:DBListHeadLineTextBlock Text="Lebensdauer" />
+                    <local:DBListHeadLineTextBlock Text="[ppm/K]" />
+                </StackPanel>
+                <local:DBListHeadLineTextBlock Grid.Column="9" Text="Bestand" />
+                <local:DBListHeadLineTextBlock Grid.Column="10" Text="Bedarf" />
+                <local:DBListHeadLineTextBlock Grid.Column="11" Text="Material- status" />
+                <local:DBListHeadLineTextBlock Grid.Column="12" Text="Zusatzinfo1" />
+                <local:DBListHeadLineTextBlock Grid.Column="13" Text="Zusatzinfo2" />
+            </Grid>
+
+            <ListBox
+                x:Name="ListBox"
+                Grid.Row="2"
+                VerticalAlignment="Top"
+                AlternationCount="2"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                ItemsSource="{Binding Bauteile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                SelectedIndex="{Binding SelectedListIndex}"
+                SelectedItem="{Binding SelectedBauteil, UpdateSourceTrigger=PropertyChanged}">
+                <ListBox.Resources>
+                    <Style BasedOn="{StaticResource DBScrollBarStyle}" TargetType="ScrollBar" />
+                </ListBox.Resources>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <DataTemplate.Resources>
+                            <Style BasedOn="{StaticResource DBListTextBlockStyle}" TargetType="local:DBListTextBlock" />
+                        </DataTemplate.Resources>
+                        <TextBlock HorizontalAlignment="Center">
+                            <Grid x:Name="ListGrid" Width="{Binding ElementName=HeadLineGrid, Path=ActualWidth}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.5*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                </Grid.ColumnDefinitions>
+
+                                <local:DBListTextBlock Text="{Binding BWNummer}" />
+                                <local:DBListTextBlock Grid.Column="1" Text="{Binding MaterialNummer}" />
+                                <local:DBListTextBlock Grid.Column="2" Text="{Binding BauteilBezeichnung}" />
+                                <local:DBListTextBlock Grid.Column="3" Text="{Binding Wert}" />
+                                <local:DBListTextBlock Grid.Column="4" Text="{Binding Bauform}" />
+                                <local:DBListTextBlock Grid.Column="5" Text="{Binding Spannung}" />
+                                <local:DBListTextBlock Grid.Column="6" Text="{Binding Leistung}" />
+                                <local:DBListTextBlock Grid.Column="7" Text="{Binding Toleranz}" />
+                                <local:DBListTextBlock Grid.Column="8" Text="{Binding Lebensdauer}" />
+                                <local:DBListTextBlock Grid.Column="9" Text="{Binding Bestand}" />
+                                <local:DBListTextBlock Grid.Column="10" Text="{Binding Bedarf}" />
+                                <local:DBListTextBlock Grid.Column="11" Text="{Binding MaterialStatus}" />
+                                <local:DBListTextBlock Grid.Column="12" Text="{Binding ZusatzInfo1}" />
+                                <local:DBListTextBlock Grid.Column="13" Text="{Binding ZusatzInfo2}" />
+                            </Grid>
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+        </Grid>
+    </Grid>
+</UserControl>
